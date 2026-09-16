@@ -44,25 +44,29 @@ function App() {
         />
       </div>
 
-      <section className="grid grid-cols-1 sm:grid-cols-3 gap-6 px-6 mt-10">
-        <h2>Features</h2>
-        {features.map((item) => (
-          <div key={item.title} className="bg-white shadow-md rounded-lg p-6">
-            <h3 className="text-xl font-bold text-[#0A3D62]">{item.title}</h3>
-            <p className="text-gray-600 mt-2">{item.description}</p>
-          </div>
-        ))}
-      </section>
+      <div className="px-6 mt-10">
+        <h2 className="text-2xl font-bold text-[#0A3D62] mb-6">Features</h2>
+        <section className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+          {features.map((item) => (
+            <div key={item.title} className="bg-white shadow-md rounded-lg p-6">
+              <h3 className="text-xl font-bold text-[#0A3D62]">{item.title}</h3>
+              <p className="text-gray-600 mt-2">{item.description}</p>
+            </div>
+          ))}
+        </section>
+      </div>
 
-      <section className="grid grid-cols-1 sm:grid-cols-3 gap-6 px-6 mt-10">
-        <h2>How It Works</h2>
-        {steps.map((item) => (
-          <div key={item.step} className="bg-white shadow-md rounded-lg p-6">
-            <h3 className="text-xl font-bold text-[#0A3D62]">{item.step}. {item.title}</h3>
-            <p className="text-gray-600 mt-2">{item.description}</p>
-          </div>
-        ))}
-      </section>
+      <div className="px-6 mt-10">
+        <h2 className="text-2xl font-bold text-[#0A3D62] mb-6">How It Works</h2>
+        <section className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+          {steps.map((item) => (
+            <div key={item.step} className="bg-white shadow-md rounded-lg p-6">
+              <h3 className="text-xl font-bold text-[#0A3D62]">{item.step}. {item.title}</h3>
+              <p className="text-gray-600 mt-2">{item.description}</p>
+            </div>
+          ))}
+        </section>
+      </div>
     </>
   )
 }
