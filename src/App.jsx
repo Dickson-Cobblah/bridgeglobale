@@ -1,4 +1,5 @@
 import { useState } from 'react'
+
 const features = [
   { title: "Global Shipping", description: "Reach coustomers anywhere in the world." },
   { title: "Secure Payment", description: "safe and trusted payment methods." },
@@ -12,21 +13,95 @@ const steps = [
 ]
 
 const products = [
-  { id: 1, name: "Handwoven Kente Cloth", price: "GHS 450", category: "Fashion" },
-  { id: 2, name: "Beaded Waist Chain", price: "GHS 80", category: "Fashion" },
-  { id: 3, name: "Shea Butter Body Cream", price: "GHS 60", category: "Cosmetics" },
-  { id: 4, name: "Black Soap Bar", price: "GHS 35", category: "Cosmetics" },
-  { id: 5, name: "Handmade Wooden Stool", price: "GHS 220", category: "Crafts" },
-  { id: 6, name: "Woven Basket", price: "GHS 90", category: "Crafts" },
-  { id: 7, name: "Ankara Print Dress", price: "GHS 300", category: "Fashion" },
-  { id: 8, name: "Leather Sandals", price: "GHS 150", category: "Fashion" },
-  { id: 9, name: "Coconut Oil (Organic)", price: "GHS 45", category: "Cosmetics" },
-  { id: 10, name: "Clay Beaded Necklace", price: "GHS 70", category: "Fashion" },
-  { id: 11, name: "Wooden Carved Mask", price: "GHS 180", category: "Crafts" },
-  { id: 12, name: "Sea Moss Gel", price: "GHS 55", category: "Cosmetics" },
+  { 
+    id: 1, 
+    name: "Handwoven Kente Cloth", 
+    price: "GHS 450", 
+    category: "Fashion", 
+    image: "https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?auto=format&fit=crop&w=600&q=80" 
+  },
+  { 
+    id: 2, 
+    name: "Beaded Waist Chain", 
+    price: "GHS 80", 
+    category: "Fashion", 
+    image: "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?auto=format&fit=crop&w=600&q=80" 
+  },
+  { 
+    id: 3, 
+    name: "Shea Butter Body Cream", 
+    price: "GHS 60", 
+    category: "Cosmetics", 
+    image: "https://images.unsplash.com/photo-1556228720-195a672e8a03?auto=format&fit=crop&w=600&q=80" 
+  },
+  { 
+    id: 4, 
+    name: "Black Soap Bar", 
+    price: "GHS 35", 
+    category: "Cosmetics", 
+    image: "https://images.unsplash.com/photo-1607006344380-b6775a0824a7?auto=format&fit=crop&w=600&q=80" 
+  },
+  { 
+    id: 5, 
+    name: "Handmade Wooden Stool", 
+    price: "GHS 220", 
+    category: "Crafts", 
+    image: "https://images.unsplash.com/photo-1503602642458-232111445657?auto=format&fit=crop&w=600&q=80" 
+  },
+  { 
+    id: 6, 
+    name: "Woven Basket", 
+    price: "GHS 90", 
+    category: "Crafts", 
+    image: "https://images.unsplash.com/photo-1590736969955-71cc94801759?auto=format&fit=crop&w=600&q=80" 
+  },
+  { 
+    id: 7, 
+    name: "Ankara Print Dress", 
+    price: "GHS 300", 
+    category: "Fashion", 
+    image: "https://images.unsplash.com/photo-1572804013309-59a88b7e92f1?auto=format&fit=crop&w=600&q=80" 
+  },
+  { 
+    id: 8, 
+    name: "Leather Sandals", 
+    price: "GHS 150", 
+    category: "Fashion", 
+    image: "https://images.unsplash.com/photo-1562273138-f46be4ebdf33?auto=format&fit=crop&w=600&q=80" 
+  },
+  { 
+    id: 9, 
+    name: "Coconut Oil (Organic)", 
+    price: "GHS 45", 
+    category: "Cosmetics", 
+    image: "https://images.unsplash.com/photo-1620916566398-39f1143ab7be?auto=format&fit=crop&w=600&q=80" 
+  },
+  { 
+    id: 10, 
+    name: "Clay Beaded Necklace", 
+    price: "GHS 70", 
+    category: "Fashion", 
+    image: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&w=600&q=80" 
+  },
+  { 
+    id: 11, 
+    name: "Wooden Carved Mask", 
+    price: "GHS 180", 
+    category: "Crafts", 
+    image: "https://images.unsplash.com/photo-1578749556568-bc2c40e68b61?auto=format&fit=crop&w=600&q=80" 
+  },
+  { 
+    id: 12, 
+    name: "Sea Moss Gel", 
+    price: "GHS 55", 
+    category: "Cosmetics", 
+    image: "https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?auto=format&fit=crop&w=600&q=80" 
+  },
 ]
 
-function App() { const [selectedCategory, setSelectedCategory] = useState("All")
+function App() {
+  const [selectedCategory, setSelectedCategory] = useState("All")
+
   return (
     <>
       <nav className="flex justify-between items-center bg-[#0A3D62] px-6 py-4">
@@ -45,7 +120,7 @@ function App() { const [selectedCategory, setSelectedCategory] = useState("All")
         Empowering Ghanian vendors to scale their buisness worldwide with seamlesslogistics, international payments, and dedicated vendor dashboard.
       </p>
       <div className="mt-6 px-6 flex flex-col sm:flex-row gap-4">
-        <button className="bg-[#F39c12] hover:bg-amber-600 text-white font-semibold px-6 py-3 rounded-lg shadow transition-all">
+        <button className="bg-[#F39C12] hover:bg-amber-600 text-white font-semibold px-6 py-3 rounded-lg shadow transition-all">
           Join as Vendor
         </button>
         <button className="border-2 border-[#0A3D62] text-[#0A3D62] hover:bg-[#0A3D62] hover:text-white font-semibold px-6 py-3 rounded-lg transition-all">
@@ -84,44 +159,50 @@ function App() { const [selectedCategory, setSelectedCategory] = useState("All")
         </section>
       </div>
 
-          <div className="px-6 py-24"> <div className="flex gap-6 mb-10">
-  {["All", "Fashion", "Cosmetics", "Crafts"].map((cat) => (
-    <button
-      key={cat}
-      onClick={() => setSelectedCategory(cat)}
-      className={`pb-1 border-b-2 transition-colors ${
-        selectedCategory === cat
-          ? "border-[#F39C12] text-[#F39C12]"
-          : "border-transparent text-gray-500 hover:text-[#0A3D62]"
-      }`}
-    >
-      {cat}
-    </button>
-  ))}
-</div>
+      <div className="px-6 py-24">
+        <div className="flex gap-6 mb-10">
+          {["All", "Fashion", "Cosmetics", "Crafts"].map((cat) => (
+            <button
+              key={cat}
+              onClick={() => setSelectedCategory(cat)}
+              className={`pb-1 border-b-2 transition-colors ${
+                selectedCategory === cat
+                  ? "border-[#F39C12] text-[#F39C12]"
+                  : "border-transparent text-gray-500 hover:text-[#0A3D62]"
+              }`}
+            >
+              {cat}
+            </button>
+          ))}
+        </div>
         <h2 className="text-2xl font-bold text-[#0A3D62] mb-10">Our Products</h2>
         <section className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-x-6 gap-y-12">
-          {products.filter((item) => selectedCategory ==="All" || item.category === selectedCategory)
-          .map((item) => (
-            <div key={item.id} className="group cursor-pointer">
-              <div className="relative overflow-hidden rounded-xl bg-gray-100 aspect-square mb-4">
-                <div className="w-full h-full bg-gray-200"></div>
-                <div className="absolute inset-0 bg-black/20 flex items-end justify-center pb-6
-                                opacity-0 translate-y-2
-                                group-hover:opacity-100 group-hover:translate-y-0
-                                transition-all duration-300">
-                  <button className="bg-[#F39C12] text-white font-semibold px-5 py-2 rounded-lg">
-                    Add to Cart
-                  </button>
+          {products
+            .filter((item) => selectedCategory === "All" || item.category === selectedCategory)
+            .map((item) => (
+              <div key={item.id} className="group cursor-pointer">
+                <div className="relative overflow-hidden rounded-xl bg-gray-100 aspect-square mb-4">
+                  <img 
+                    src={item.image} 
+                    alt={item.name} 
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" 
+                  />
+                  <div className="absolute inset-0 bg-black/20 flex items-end justify-center pb-6
+                                  opacity-0 translate-y-2
+                                  group-hover:opacity-100 group-hover:translate-y-0
+                                  transition-all duration-300">
+                    <button className="bg-[#F39C12] text-white font-semibold px-5 py-2 rounded-lg">
+                      Add to Cart
+                    </button>
+                  </div>
                 </div>
+                <h3 className="font-medium text-[#0A3D62] capitalize">{item.name}</h3>
+                <p className="text-gray-500 text-sm mt-1">{item.category}</p>
+                <p className="text-[#0A3D62] font-semibold mt-1">{item.price}</p>
               </div>
-              <h3 className="font-medium text-[#0A3D62] capitalize">{item.name}</h3>
-              <p className="text-gray-500 text-sm mt-1">{item.category}</p>
-              <p className="text-[#0A3D62] font-semibold mt-1">{item.price}</p>
-            </div>
-          ))}
+            ))}
         </section>
-      </div> 
+      </div>
     </>
   )
 }
