@@ -1,3 +1,4 @@
+import { useState } from 'react'
 const features = [
   { title: "Global Shipping", description: "Reach coustomers anywhere in the world." },
   { title: "Secure Payment", description: "safe and trusted payment methods." },
@@ -10,7 +11,22 @@ const steps = [
   { step: "3", title: "Start Selling", description: "Push the button and reach the whole world" },
 ]
 
-function App() {
+const products = [
+  { id: 1, name: "Handwoven Kente Cloth", price: "GHS 450", category: "Fashion" },
+  { id: 2, name: "Beaded Waist Chain", price: "GHS 80", category: "Fashion" },
+  { id: 3, name: "Shea Butter Body Cream", price: "GHS 60", category: "Cosmetics" },
+  { id: 4, name: "Black Soap Bar", price: "GHS 35", category: "Cosmetics" },
+  { id: 5, name: "Handmade Wooden Stool", price: "GHS 220", category: "Crafts" },
+  { id: 6, name: "Woven Basket", price: "GHS 90", category: "Crafts" },
+  { id: 7, name: "Ankara Print Dress", price: "GHS 300", category: "Fashion" },
+  { id: 8, name: "Leather Sandals", price: "GHS 150", category: "Fashion" },
+  { id: 9, name: "Coconut Oil (Organic)", price: "GHS 45", category: "Cosmetics" },
+  { id: 10, name: "Clay Beaded Necklace", price: "GHS 70", category: "Fashion" },
+  { id: 11, name: "Wooden Carved Mask", price: "GHS 180", category: "Crafts" },
+  { id: 12, name: "Sea Moss Gel", price: "GHS 55", category: "Cosmetics" },
+]
+
+function App() { const [selectedCategory, setSelectedCategory] = useState("All")
   return (
     <>
       <nav className="flex justify-between items-center bg-[#0A3D62] px-6 py-4">
@@ -67,6 +83,45 @@ function App() {
           ))}
         </section>
       </div>
+
+          <div className="px-6 py-24"> <div className="flex gap-6 mb-10">
+  {["All", "Fashion", "Cosmetics", "Crafts"].map((cat) => (
+    <button
+      key={cat}
+      onClick={() => setSelectedCategory(cat)}
+      className={`pb-1 border-b-2 transition-colors ${
+        selectedCategory === cat
+          ? "border-[#F39C12] text-[#F39C12]"
+          : "border-transparent text-gray-500 hover:text-[#0A3D62]"
+      }`}
+    >
+      {cat}
+    </button>
+  ))}
+</div>
+        <h2 className="text-2xl font-bold text-[#0A3D62] mb-10">Our Products</h2>
+        <section className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-x-6 gap-y-12">
+          {products.filter((item) => selectedCategory ==="All" || item.category === selectedCategory)
+          .map((item) => (
+            <div key={item.id} className="group cursor-pointer">
+              <div className="relative overflow-hidden rounded-xl bg-gray-100 aspect-square mb-4">
+                <div className="w-full h-full bg-gray-200"></div>
+                <div className="absolute inset-0 bg-black/20 flex items-end justify-center pb-6
+                                opacity-0 translate-y-2
+                                group-hover:opacity-100 group-hover:translate-y-0
+                                transition-all duration-300">
+                  <button className="bg-[#F39C12] text-white font-semibold px-5 py-2 rounded-lg">
+                    Add to Cart
+                  </button>
+                </div>
+              </div>
+              <h3 className="font-medium text-[#0A3D62] capitalize">{item.name}</h3>
+              <p className="text-gray-500 text-sm mt-1">{item.category}</p>
+              <p className="text-[#0A3D62] font-semibold mt-1">{item.price}</p>
+            </div>
+          ))}
+        </section>
+      </div> 
     </>
   )
 }
