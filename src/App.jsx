@@ -85,15 +85,15 @@ function App() {
         <img
           src={heroImages[currentImage]}
           alt="BridgeGlobale showcase"
-          className="rounded-xl shadow-lg w-full h-64 object-cover"
+          className="rounded-xl shadow-lg w-full h-[400px] md:h-[500px] object-cover transition-all duration-500"
         />
-        <div className="flex gap-2 mt-3">
+        <div className="flex gap-2 mt-3 justify-center">
           {heroImages.map((_, index) => (
             <button
               key={index}
               onClick={() => setCurrentImage(index)}
-              className={`w-3 h-3 rounded-full ${
-                currentImage === index ? "bg-[#F39C12]" : "bg-gray-300"
+              className={`h-3 rounded-full transition-all ${
+                currentImage === index ? "bg-[#F39C12] w-6" : "bg-gray-300 w-3"
               }`}
             ></button>
           ))}
@@ -207,16 +207,17 @@ function App() {
             Join Waitlist
           </button>
         </div>
-        <footer className="bg-[#0A3D62] text-white px-6 py-10 text-center">
-  <p className="font-bold text-lg mb-4">BridgeGlobale</p>
-  <div className="flex justify-center gap-6 mb-4">
-    <a href="#" className="hover:text-[#F39C12]">Facebook</a>
-    <a href="#" className="hover:text-[#F39C12]">Instagram</a>
-    <a href="#" className="hover:text-[#F39C12]">Twitter</a>
-  </div>
-  <p className="text-sm text-gray-300">© 2026 BridgeGlobale. All rights reserved.</p>
-</footer>
       </div>
+
+      <footer className="bg-[#0A3D62] text-white px-6 py-10 text-center">
+        <p className="font-bold text-lg mb-4">BridgeGlobale</p>
+        <div className="flex justify-center gap-6 mb-4">
+          <a href="#" className="hover:text-[#F39C12]">Facebook</a>
+          <a href="#" className="hover:text-[#F39C12]">Instagram</a>
+          <a href="#" className="hover:text-[#F39C12]">Twitter</a>
+        </div>
+        <p className="text-sm text-gray-300">© 2026 BridgeGlobale. All rights reserved.</p>
+      </footer>
     </>
   )
 }
