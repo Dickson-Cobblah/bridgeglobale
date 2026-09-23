@@ -50,9 +50,22 @@ function Home() {
     return () => clearInterval(timer)
   }, [])
 
-  const handleSubmit = () => {
-    console.log("Waitlist submission:", formData)
-    alert("Thanks for joining the waitlist, " + formData.name + "!")
+  const handleSubmit = async () => {
+    try {
+      const response = await fetch("https://formspree.io/f/mrpbkegp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      })
+
+      if (response.ok) {
+        alert("Thanks for joining the waitlist, " + formData.name + "!")
+      } else {
+        alert("Something went wrong, please try again.")
+      }
+    } catch (error) {
+      alert("Something went wrong, please try again.")
+    }
   }
 
   return (

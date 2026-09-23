@@ -7,7 +7,9 @@ function App() {
   return (
     <>
       <nav className="flex justify-between items-center bg-[#0A3D62] px-6 py-4">
-        <h1 className="text-white text-xl font-bold">BridgeGlobale</h1>
+        <h1 className="text-white text-xl font-bold">
+          <span className="text-2xl">B</span>ridge<span className="text-2xl">G</span>lobale
+        </h1>
         <div className="space-x-6">
           <Link to="/" className="text-white">Home</Link>
           <Link to="/vendors" className="text-white">Vendors</Link>
