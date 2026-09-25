@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react'
 
 const features = [
-  { title: "Global Shipping", description: "Reach coustomers anywhere in the world." },
-  { title: "Secure Payment", description: "safe and trusted payment methods." },
+  { title: "Global Shipping", description: "Reach customers anywhere in the world." },
+  { title: "Secure Payment", description: "Safe and trusted payment methods." },
   { title: "Vendor Dashboard", description: "Track your sales." },
 ]
 
@@ -27,15 +27,16 @@ const products = [
   { id: 6, name: "Woven Basket", price: "GHS 90", category: "Crafts", image: "https://images.unsplash.com/photo-1590736969955-71cc94801759?auto=format&fit=crop&w=600&q=80" },
   { id: 7, name: "Ankara Print Dress", price: "GHS 300", category: "Fashion", image: "https://images.unsplash.com/photo-1572804013309-59a88b7e92f1?auto=format&fit=crop&w=600&q=80" },
   { id: 8, name: "Leather Sandals", price: "GHS 150", category: "Fashion", image: "https://images.unsplash.com/photo-1562273138-f46be4ebdf33?auto=format&fit=crop&w=600&q=80" },
-  { id: 9, name: "Coconut Oil (Organic)", price: "GHS 45", category: "Cosmetics", image: "https://images.unsplash.com/photo-1620916566398-39f1143ab7be?auto=format&fit=crop&w=600&q=80" },
-  { id: 10, name: "Clay Beaded Necklace", price: "GHS 70", category: "Fashion", image: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&w=600&q=80" },
-  { id: 11, name: "Wooden Carved Mask", price: "GHS 180", category: "Crafts", image: "https://images.unsplash.com/photo-1578749556568-bc2c40e68b61?auto=format&fit=crop&w=600&q=80" },
-  { id: 12, name: "Sea Moss Gel", price: "GHS 55", category: "Cosmetics", image: "https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?auto=format&fit=crop&w=600&q=80" },
 ]
 
 function Home() {
   const [selectedCategory, setSelectedCategory] = useState("All")
+  const [searchQuery, setSearchQuery] = useState("")
+  const [sortBy, setSortBy] = useState("default")
   const [currentImage, setCurrentImage] = useState(0)
+  const [cart, setCart] = useState([])
+  const [isCartOpen, setIsCartOpen] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false)
   const [formData, setFormData] = useState({
     name: "",
     business: "",
@@ -50,7 +51,20 @@ function Home() {
     return () => clearInterval(timer)
   }, [])
 
-  const handleSubmit = async () => {
+  const addToCart = (product) => {
+    setCart((prev) => {
+      const exists = prev.find((i) => i.id === product.id)
+      if (exists) {
+        return prev.map((i) => (i.id === product.id ? { ...i, quantity: i.quantity + 1 } : i))
+      }
+      return [...prev, { ...product, quantity: 1 }]
+    })
+    setIsCartOpen(true)
+  }
+
+  const handleSubmit = async (e) => {
+    if (e) e.preventDefault()
+    setIsSubmitting(true)
     try {
       const response = await fetch("https://formspree.io/f/mrpbkegp", {
         method: "POST",
@@ -60,29 +74,112 @@ function Home() {
 
       if (response.ok) {
         alert("Thanks for joining the waitlist, " + formData.name + "!")
+        setFormData({ name: "", business: "", phone: "", sells: "" })
       } else {
         alert("Something went wrong, please try again.")
       }
-    } catch (error) {
+    } catch {
       alert("Something went wrong, please try again.")
+    } finally {
+      setIsSubmitting(false)
     }
   }
 
+  const filteredProducts = products
+    .filter((item) => selectedCategory === "All" || item.category === selectedCategory)
+    .filter((item) => item.name.toLowerCase().includes(searchQuery.toLowerCase()))
+    .sort((a, b) => {
+      const priceA = parseFloat(a.price.replace("GHS ", ""))
+      const priceB = parseFloat(b.price.replace("GHS ", ""))
+      if (sortBy === "low-high") return priceA - priceB
+      if (sortBy === "high-low") return priceB - priceA
+      return 0
+    })
+
+  const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0)
+
   return (
-    <>
+    <div className="min-h-screen bg-white text-gray-800">
+      {/* Custom Keyframe Styles for Fade-In Effect */}
+      <style>{`
+        @keyframes fadeIn {
+          from { opacity: 0; transform: translateY(6px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in {
+          animation: fadeIn 0.35s ease-out forwards;
+        }
+      `}</style>
+
+      {/* Header Bar */}
+      <header className="sticky top-0 z-40 bg-white border-b border-gray-100 px-6 py-4 flex items-center justify-between shadow-sm">
+        <span className="text-xl font-bold text-[#0A3D62]">BridgeGlobale</span>
+        <button
+          onClick={() => setIsCartOpen(true)}
+          className="relative bg-gray-100 p-2 rounded-lg hover:bg-gray-200 transition-colors"
+        >
+          🛒 Cart
+          {cartCount > 0 && (
+            <span className="absolute -top-2 -right-2 bg-[#F39C12] text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center">
+              {cartCount}
+            </span>
+          )}
+        </button>
+      </header>
+
+      {/* Cart Drawer */}
+      {isCartOpen && (
+        <div className="fixed inset-0 z-50 flex justify-end bg-black/40">
+          <div className="w-full max-w-md bg-white h-full p-6 shadow-xl flex flex-col justify-between">
+            <div>
+              <div className="flex justify-between items-center mb-6">
+                <h2 className="text-xl font-bold text-[#0A3D62]">Your Cart</h2>
+                <button onClick={() => setIsCartOpen(false)} className="text-gray-500 font-bold">✕</button>
+              </div>
+              {cart.length === 0 ? (
+                <p className="text-gray-500">Your cart is empty.</p>
+              ) : (
+                <div className="space-y-4">
+                  {cart.map((item) => (
+                    <div key={item.id} className="flex justify-between items-center border-b pb-2">
+                      <div>
+                        <p className="font-medium text-[#0A3D62]">{item.name}</p>
+                        <p className="text-sm text-gray-500">{item.price} x {item.quantity}</p>
+                      </div>
+                      <button
+                        onClick={() => setCart(cart.filter((i) => i.id !== item.id))}
+                        className="text-red-500 text-sm hover:underline"
+                      >
+                        Remove
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+            {cart.length > 0 && (
+              <button className="w-full bg-[#F39C12] text-white font-semibold py-3 rounded-lg hover:bg-amber-600 transition-all">
+                Proceed to Checkout
+              </button>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* Hero */}
       <h1 className="text-4xl font-bold text-[#0A3D62] mt-8 px-6">
         Sell Your Products Globally, <span className="text-[#F39C12]"> From Ghana</span>
       </h1>
       <p className="mt-4 px-6 text-lg text-gray-600 max-w-2xl">
-        Empowering Ghanian vendors to scale their buisness worldwide with seamlesslogistics, international payments, and dedicated vendor dashboard.
+        Empowering Ghanaian vendors to scale their business worldwide with seamless logistics, international payments, and dedicated vendor dashboard.
       </p>
       <div className="mt-6 px-6 flex flex-col sm:flex-row gap-4">
-        <button className="bg-[#F39C12] hover:bg-amber-600 text-white font-semibold px-6 py-3 rounded-lg shadow transition-all">
+        <a href="#waitlist" className="bg-[#F39C12] hover:bg-amber-600 text-white font-semibold px-6 py-3 rounded-lg shadow transition-all text-center">
           Join as Vendor
-        </button>
-        <button className="border-2 border-[#0A3D62] text-[#0A3D62] hover:bg-[#0A3D62] hover:text-white font-semibold px-6 py-3 rounded-lg transition-all">
+        </a>
+        <a href="#products" className="border-2 border-[#0A3D62] text-[#0A3D62] hover:bg-[#0A3D62] hover:text-white font-semibold px-6 py-3 rounded-lg transition-all text-center">
           Explore Products
-        </button>
+        </a>
       </div>
 
       <div className="mt-8 px-6">
@@ -104,6 +201,7 @@ function Home() {
         </div>
       </div>
 
+      {/* Features */}
       <div className="px-6 mt-10">
         <h2 className="text-2xl font-bold text-[#0A3D62] mb-6">Features</h2>
         <section className="grid grid-cols-1 sm:grid-cols-3 gap-6">
@@ -116,6 +214,7 @@ function Home() {
         </section>
       </div>
 
+      {/* How It Works */}
       <div className="px-6 mt-10">
         <h2 className="text-2xl font-bold text-[#0A3D62] mb-6">How It Works</h2>
         <section className="grid grid-cols-1 sm:grid-cols-3 gap-6">
@@ -128,39 +227,72 @@ function Home() {
         </section>
       </div>
 
-      <div className="px-6 py-24">
-        <div className="flex gap-6 mb-10">
-          {["All", "Fashion", "Cosmetics", "Crafts"].map((cat) => (
-            <button
-              key={cat}
-              onClick={() => setSelectedCategory(cat)}
-              className={`pb-1 border-b-2 transition-colors ${
-                selectedCategory === cat
-                  ? "border-[#F39C12] text-[#F39C12]"
-                  : "border-transparent text-gray-500 hover:text-[#0A3D62]"
-              }`}
+      {/* Products Section */}
+      <div id="products" className="px-6 py-24">
+        <div className="flex flex-col md:flex-row gap-4 justify-between items-start md:items-center mb-10">
+          <div className="flex gap-6 overflow-x-auto pb-2 w-full md:w-auto">
+            {["All", "Fashion", "Cosmetics", "Crafts"].map((cat) => (
+              <button
+                key={cat}
+                onClick={() => setSelectedCategory(cat)}
+                className={`pb-1 border-b-2 transition-colors ${
+                  selectedCategory === cat
+                    ? "border-[#F39C12] text-[#F39C12]"
+                    : "border-transparent text-gray-500 hover:text-[#0A3D62]"
+                }`}
+              >
+                {cat}
+              </button>
+            ))}
+          </div>
+
+          <div className="flex gap-3 w-full md:w-auto">
+            <input
+              type="text"
+              placeholder="Search products..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="border border-gray-300 rounded-lg px-3 py-2 text-sm w-full md:w-48"
+            />
+            <select
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value)}
+              className="border border-gray-300 rounded-lg px-3 py-2 text-sm bg-white"
             >
-              {cat}
-            </button>
-          ))}
+              <option value="default">Sort by</option>
+              <option value="low-high">Price: Low to High</option>
+              <option value="high-low">Price: High to Low</option>
+            </select>
+          </div>
         </div>
+
         <h2 className="text-2xl font-bold text-[#0A3D62] mb-10">Our Products</h2>
-        <section className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-x-6 gap-y-12">
-          {products
-            .filter((item) => selectedCategory === "All" || item.category === selectedCategory)
-            .map((item) => (
+
+        {/* Animated Grid Container re-mounts on filter/sort changes */}
+        <section
+          key={`${selectedCategory}-${searchQuery}-${sortBy}`}
+          className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-x-6 gap-y-12 animate-fade-in"
+        >
+          {filteredProducts.length === 0 ? (
+            <p className="text-gray-500 col-span-full">No products match your criteria.</p>
+          ) : (
+            filteredProducts.map((item) => (
               <div key={item.id} className="group cursor-pointer">
                 <div className="relative overflow-hidden rounded-xl bg-gray-100 aspect-square mb-4">
                   <img 
                     src={item.image} 
                     alt={item.name} 
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" 
+                    loading="lazy"
+                    className="w-full h-full object-cover group-hover:scale-105 transition-all duration-500" 
                   />
                   <div className="absolute inset-0 bg-black/20 flex items-end justify-center pb-6
                                   opacity-0 translate-y-2
                                   group-hover:opacity-100 group-hover:translate-y-0
                                   transition-all duration-300">
-                    <button className="bg-[#F39C12] text-white font-semibold px-5 py-2 rounded-lg">
+                    <button 
+                      onClick={() => addToCart(item)}
+                      className="bg-[#F39C12] text-white font-semibold px-5 py-2 rounded-lg"
+                    >
                       Add to Cart
                     </button>
                   </div>
@@ -169,15 +301,18 @@ function Home() {
                 <p className="text-gray-500 text-sm mt-1">{item.category}</p>
                 <p className="text-[#0A3D62] font-semibold mt-1">{item.price}</p>
               </div>
-            ))}
+            ))
+          )}
         </section>
       </div>
 
-      <div className="px-6 py-24 bg-gray-50">
+      {/* Waitlist Section */}
+      <div id="waitlist" className="px-6 py-24 bg-gray-50">
         <h2 className="text-2xl font-bold text-[#0A3D62] mb-6">Join the Waitlist</h2>
-        <div className="flex flex-col gap-4 max-w-md">
+        <form onSubmit={handleSubmit} className="flex flex-col gap-4 max-w-md">
           <input
             type="text"
+            required
             placeholder="Your Name"
             value={formData.name}
             onChange={(e) => setFormData({ ...formData, name: e.target.value })}
@@ -185,13 +320,15 @@ function Home() {
           />
           <input
             type="text"
+            required
             placeholder="Business Name"
             value={formData.business}
             onChange={(e) => setFormData({ ...formData, business: e.target.value })}
             className="border border-gray-300 rounded-lg px-4 py-3"
           />
           <input
-            type="text"
+            type="tel"
+            required
             placeholder="Phone Number"
             value={formData.phone}
             onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
@@ -199,20 +336,23 @@ function Home() {
           />
           <input
             type="text"
+            required
             placeholder="What do you sell?"
             value={formData.sells}
             onChange={(e) => setFormData({ ...formData, sells: e.target.value })}
             className="border border-gray-300 rounded-lg px-4 py-3"
           />
           <button
-            onClick={handleSubmit}
-            className="bg-[#F39C12] hover:bg-amber-600 text-white font-semibold px-6 py-3 rounded-lg transition-all"
+            type="submit"
+            disabled={isSubmitting}
+            className="bg-[#F39C12] hover:bg-amber-600 disabled:opacity-50 text-white font-semibold px-6 py-3 rounded-lg transition-all"
           >
-            Join Waitlist
+            {isSubmitting ? "Submitting..." : "Join Waitlist"}
           </button>
-        </div>
+        </form>
       </div>
 
+      {/* Footer */}
       <footer className="bg-[#0A3D62] text-white px-6 py-10 text-center">
         <p className="font-bold text-lg mb-4">BridgeGlobale</p>
         <div className="flex justify-center gap-6 mb-4">
@@ -222,7 +362,7 @@ function Home() {
         </div>
         <p className="text-sm text-gray-300">© 2026 BridgeGlobale. All rights reserved.</p>
       </footer>
-    </>
+    </div>
   )
 }
 
